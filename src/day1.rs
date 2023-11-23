@@ -1,6 +1,22 @@
-use read_file;
+use std::fs::File;
+use std::io::Read;
 
-fn part1(input : &[u8], len : usize) -> u32 {
+pub fn get_input<'a>(arr: &'a mut [u8], file_name: &str) -> &'a mut [u8] {
+    let file : File = File::open(file_name).unwrap();
+
+    let mut idx : usize = 0;
+    for byte in file.bytes(){
+        if idx>=arr.len() {
+            return &mut arr[..idx];
+        }
+        arr[idx] = byte.unwrap();
+        idx += 1;
+    }
+
+    return &mut arr[..idx];
+}
+
+fn part1(input : &[u8]) -> u32 {
 
     if input.len() < 2 {
         return 0;
@@ -11,7 +27,7 @@ fn part1(input : &[u8], len : usize) -> u32 {
     let mut curr: u8;
     let mut res: u32 = 0;
 
-    for index in 1..len {
+    for index in 1..input.len() {
         if input[index] == 0 {
             break;
         }
@@ -29,13 +45,13 @@ fn part1(input : &[u8], len : usize) -> u32 {
     return res;
 }
 
-fn part2(input : &[u8], len : usize) -> u32 {
+fn part2(input : &[u8]) -> u32 {
 
     if input.len() < 2 {
         return 0;
     }
 
-    let offset : usize = len/2;
+    let offset : usize = input.len()/2;
 
     let mut curr: u8;
     let mut mirror: u8;
@@ -46,7 +62,7 @@ fn part2(input : &[u8], len : usize) -> u32 {
             break;
         }
         curr = input[index];
-        mirror = input[ (index+offset)%len ];
+        mirror = input[ (index+offset)%input.len() ];
         if mirror == curr {
             res += ((curr - b'0')*2) as u32;
         }
@@ -59,8 +75,8 @@ pub fn run() {
     const MAX_ARR_SIZE : usize = 2048;
     let mut arr : [u8; MAX_ARR_SIZE] = [0; MAX_ARR_SIZE];
 
-    let len = read_file::get_input(&mut arr, MAX_ARR_SIZE, "day1.txt");
+    let slice = get_input(&mut arr[..], "resources/day1/input.txt");
 
-    println!("The result is: {}", part1(&arr, len));
-    println!("The result is: {}", part2(&arr, len));
+    println!("\t-Part 1: {}", part1(&slice[..]));
+    println!("\t-Part 2: {}", part2(&slice[..]));
 }
