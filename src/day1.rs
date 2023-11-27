@@ -27,11 +27,11 @@ fn part1(input : &[u8]) -> u32 {
     let mut curr: u8;
     let mut res: u32 = 0;
 
-    for index in 1..input.len() {
-        if input[index] == 0 {
+    for &elem in &input[1..] {
+        if elem == 0 {
             break;
         }
-        curr = input[index];
+        curr = elem;
         if prev == curr {
             res += (prev - b'0') as u32;
         }
@@ -51,18 +51,18 @@ fn part2(input : &[u8]) -> u32 {
         return 0;
     }
 
-    let offset : usize = input.len()/2;
+    let mid_point : usize = input.len()/2;
 
     let mut curr: u8;
     let mut mirror: u8;
     let mut res: u32 = 0;
 
-    for index in 0..offset {
-        if input[index] == 0 {
+    for (idx, &elem) in input[..mid_point].iter().enumerate() {
+        if elem == 0 {
             break;
         }
-        curr = input[index];
-        mirror = input[ (index+offset)%input.len() ];
+        curr = elem;
+        mirror = input[ (idx+mid_point)%input.len() ];
         if mirror == curr {
             res += ((curr - b'0')*2) as u32;
         }

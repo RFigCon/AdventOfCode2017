@@ -23,6 +23,10 @@ fn calc_check_sum() -> (u32, u32) {
 
     for c in contents.chars(){
         ended_on_nl = false;
+
+        if c == '\r' {
+            continue;
+        }
         
         if c>='0' && c<='9' {
             num *= 10;
@@ -74,23 +78,21 @@ fn calc_check_sum() -> (u32, u32) {
 }
 
 fn get_even_div(list : &Vec<u32>) -> u32 {
+    
+    for (i, &elem_a) in list[..].iter().enumerate() {
+        for &elem_b in &list[i+1..] {
 
-    for (i, elem_a) in list.iter().enumerate() {
-        for (j, elem_b) in list.iter().rev().enumerate() {
-
-            if i == (list.len() - j - 1) {break;}
-
-            if elem_b%elem_a == 0 {
+            if elem_a != 0 && elem_b%elem_a == 0 {
                 return elem_b/elem_a; 
             }
 
-            if elem_a%elem_b == 0 {
+            if elem_b != 0 && elem_a%elem_b == 0 {
                 return elem_a/elem_b;
             }
 
         }
     }
-
+    
     return 0;
 }
 
